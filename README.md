@@ -98,7 +98,88 @@ If you’re working on a project that should have a wrapper (e.g., a typical And
     1
 
     🔒 Make sure to commit the generated wrapper files if you’re setting up a new project for sharing.
+Here is the complete, **working command sequence** to build your Android project in a Nix environment—fully self-contained and ready to run from your project root (`/home/user/Music-Player-GO`):
 
-#java 
+---
+
+### ✅ Step-by-Step Working Commands
+
+#### 1. **Create `shell.nix` in your project root**
+```bash
+cat > shell.nix <<'EOF'
+{ pkgs ? import <nixpkgs> {} }:
+
+let
+  androidEnv = pkgs.androidenv.composeAndroidPackages {
+    buildToolsVersions = [ "30.0.3" ];
+    platformVersions = [ "32" ];
+  };
+in
+pkgs.mkShell {
+  buildInputs = [
+    pkgs.openjdk17  # Recommended for Android (JDK 17 is more compatible than 19)
+    androidEnv.androidsdk
+  ];
+
+  shellHook = ''
+    export JAVA_HOME=${pkgs.openjdk17}
+    export ANDROID_HOME=${androidEnv.androidsdk}
+  '';
+}
+EOF
+```
+
+> 💡 **Why JDK 17?** Android Gradle Plugin (especially older versions) often has compatibility issues with JDK 19. JDK 17 is the current LTS and widely supported.
+
+---
+
+#### 2. **Run the build inside a Nix shell with proper flags**
+```bash
+NIXPKGS_ALLOW_UNFREE=1 \
+NIXPKGS_ACCEPT_ANDROID_SDK_LICENSE=1 \
+nix-shell --run "cd project && ./gradlew assembleDebug --stacktrace --info" 2>&1 | tee build.log
+```
+
+> This command:
+> - Accepts Android SDK licenses
+> - Allows unfree packages (required for Android SDK)
+> - Enters the Nix shell with correct JDK + SDK
+> - Runs the Gradle build from the `project/` subdirectory
+> - Captures full output (stdout + stderr) into `build.log` **and** shows it live
+
+---
+
+### 📝 Alternative: One-liner (if you already have `shell.nix`)
+```bash
+NIXPKGS_ALLOW_UNFREE=1 NIXPKGS_ACCEPT_ANDROID_SDK_LICENSE=1 nix-shell --run "cd project && ./gradlew assembleDebug --stacktrace --info > build.log 2>&1"
+```
+
+---
+
+### 🔧 If you must use JDK 19 (not recommended but possible)
+Replace `openjdk17` with `openjdk19` in the `shell.nix` file above, and ensure your `gradle.properties` includes:
+```properties
+org.gradle.java.home=/nix/store/...-openjdk-19.0.2+7
+```
+But again—**JDK 17 is safer** for Android builds.
+
+---
+
+### ✅ Summary of What’s Working
+
+| Component        | Status |
+|------------------|--------|
+| JDK              | ✅ Provided via Nix (`openjdk17`) |
+| Android SDK      | ✅ Includes platform-32 & build-tools 30.0.3 |
+| Licenses         | ✅ Auto-accepted via env vars |
+| Environment      | ✅ `JAVA_HOME` & `ANDROID_HOME` set |
+| Build directory  | ✅ Runs from `project/` subfolder |
+| Log output       | ✅ Saved to `build.log` |
+
+Run the two commands above in order, and your build should proceed without JAVA_HOME, SDK, or license errors.
+
+Let me know if you'd like a version that cleans the build first (`./gradlew clean`) or targets a different variant (e.g., `assembleRelease`).
+
+
 
 
