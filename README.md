@@ -1,11 +1,15 @@
 #1
 
          mkdir -p /home/user/android_sdk && /nix/store/99kpar230sl91y6wzwhk1l7s8dpzs2xd-androidsdk/libexec/android-sdk/cmdline-tools/19.0/bin/sdkmanager --sdk_root=/home/user/android_sdk "platforms;android-33" "build-tools;30.0.3" && export ANDROID_HOME=/home/user/android_sdk && export JAVA_HOME=/nix/store/hjqlrb1224nrxvci6fx4k9kh9s8mdnv3-openjdk-17.0.17+8/ && cd project && ./gradlew assembleDebug
+------
+#1 or
 
+         mkdir -p /home/user/android_sdk && /nix/store/99kpar230sl91y6wzwhk1l7s8dpzs2xd-androidsdk/libexec/android-sdk/cmdline-tools/19.0/bin/sdkmanager --sdk_root=/home/user/android_sdk "platforms;android-33" "build-tools;30.0.3" && export ANDROID_HOME=/home/user/android_sdk && export JAVA_HOME=/nix/store/hjqlrb1224nrxvci6fx4k9kh9s8mdnv3-openjdk-17.0.17+8/ && ./gradlew -p app assembleDebug
+-----
 #1 gradlew assembleRelease
 
          mkdir -p /home/user/android_sdk && /nix/store/99kpar230sl91y6wzwhk1l7s8dpzs2xd-androidsdk/libexec/android-sdk/cmdline-tools/19.0/bin/sdkmanager --sdk_root=/home/user/android_sdk "platforms;android-33" "build-tools;30.0.3" && export ANDROID_HOME=/home/user/android_sdk && export JAVA_HOME=/nix/store/hjqlrb1224nrxvci6fx4k9kh9s8mdnv3-openjdk-17.0.17+8/ && cd project && ./gradlew assembleRelease
-         
+--------       
 #2
 
         mkdir -p /home/user/android_sdk && /nix/store/99kpar230sl91y6wzwhk1l7s8dpzs2xd-androidsdk/libexec/android-sdk/cmdline-tools/19.0/bin/sdkmanager --sdk_root=/home/user/android_sdk "platforms;android-33" "build-tools;30.0.3" && export ANDROID_HOME=/home/user/android_sdk && export JAVA_HOME=/nix/store/hjqlrb1224nrxvci6fx4k9kh9s8mdnv3-openjdk-17.0.17+8/ && cd  android && ./gradlew 
