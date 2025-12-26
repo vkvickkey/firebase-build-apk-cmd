@@ -23,8 +23,19 @@
 
 #6
 
-    
+github ( help for git push https://github.com/vkvickkey/go-music push now )
 
+#1
+
+         git remote -v
+
+#2
+
+         git branch --show-current
+
+#3
+
+         git push vkvickkey feat/natural-sort-and-cover-art-options  
 
 
 
